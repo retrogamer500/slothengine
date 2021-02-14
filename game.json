@@ -1,0 +1,10 @@
+{
+  "resources": {
+    "images": [
+      {
+        "filename": "data/sloth.png",
+        "key":"sloth"
+      }
+    ]
+  }
+}
