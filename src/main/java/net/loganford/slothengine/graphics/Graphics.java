@@ -1,12 +1,18 @@
 package net.loganford.slothengine.graphics;
 
-import net.loganford.slothengine.Input;
+import lombok.Getter;
+import net.loganford.slothengine.Game;
 import net.loganford.slothengine.config.json.ImageConfig;
 
 public abstract class Graphics {
+
+    @Getter private Game game;
+
+    public Graphics(Game game) {
+        this.game = game;
+    }
     public abstract void initialize();
     public abstract boolean closeRequested();
-    public abstract Input getDefaultInput();
     public abstract void setTitle(String title);
     public abstract Image loadImage(ImageConfig imageConfig);
 }

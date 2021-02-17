@@ -1,11 +1,11 @@
 package net.loganford.slothengine;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 import net.loganford.slothengine.config.ConfigurationLoader;
 import net.loganford.slothengine.graphics.Graphics;
-import net.loganford.slothJava2d.JavaGraphics;
 import net.loganford.slothengine.graphics.Image;
 import net.loganford.slothengine.resources.ResourceManager;
 import net.loganford.slothengine.resources.loading.ImageLoader;
@@ -28,27 +28,30 @@ import java.util.HashSet;
 import java.util.List;
 
 @Log4j2
-public class Game {
+public abstract class Game {
+
     public static final long NANOSECONDS_IN_SECOND = 1000000000;
     public static final long NANOSECONDS_IN_MILLISECOND = 1000000;
     public static final long MILLISECONDS_IN_SECOND = 1000;
     public static final long SLEEP_BUFFER_MS = 2;
 
-    private boolean running = true;
+    @Getter(AccessLevel.PROTECTED) private boolean running = true;
 
-    @Getter private int maxFps;
+    @Getter
+    private int maxFps;
     @Getter private int minFps;
-    private long lastFrameTime;
-    private long maxFrameTimeNs = NANOSECONDS_IN_SECOND / 144L;
-    private long minFrameTimeNs = NANOSECONDS_IN_SECOND / 60L;
+    protected long lastFrameTime;
+    @Getter protected long maxFrameTimeNs = NANOSECONDS_IN_SECOND / 144L;
+    @Getter protected long minFrameTimeNs = NANOSECONDS_IN_SECOND / 60L;
 
     //Default resource mapper to use when converting resource paths in the config.json into files
-    @Getter @Setter private ResourceMapper resourceMapper = new FileResourceMapper(new File(""));
+    @Getter @Setter
+    private ResourceMapper resourceMapper = new FileResourceMapper(new File(""));
     @Getter @Setter private DataSource configSource = new FileDataSource(new File("game.json"));
 
     @Getter private ConfigurationLoader configurationLoader;
-    @Getter @Setter public Graphics graphics = new JavaGraphics();
-    @Getter @Setter public Input input;
+    @Getter @Setter private Graphics graphics;
+    @Getter @Setter private Input input;
 
     @Getter private GameState gameState;
     private GameState nextGameState;
@@ -80,72 +83,46 @@ public class Game {
         loadingScreen.beginLoadingScreen(gameState);
     }
 
-    /**
-     * Loads the game configuration.
-     */
-    protected void loadConfiguration() {
+    public void initialize() {
+        //Load configuration
+        log.info("Loading configuration");
         configurationLoader.load(resourceMapper, configSource);
-    }
 
-    protected void startGame() {
+        //Set up graphics
         graphics.initialize();
         graphics.setTitle("Sloth Engine");
-        input = graphics.getDefaultInput();
         input.initialize();
 
+        //Set up game state
         log.info("Setting up game states");
         gameState.beginState(this);
         gameState.postBeginState(this);
-    }
 
-    public void run() {
-        log.info("Loading configuration");
-        loadConfiguration();
-        log.info("Initializing game");
-        startGame();
-
-        log.info("Entering game loop");
+        //Set up timers
         lastFrameTime = System.nanoTime();
         framerateMonitor.start();
         idleTimeTracker.start();
+    }
 
-        while(running) {
-            long currentTime = System.nanoTime();
-            long deltaTimeNs = currentTime - lastFrameTime;
+    protected void stepAndRender(float delta) {
+        getInput().processInput();
 
-            long sleepTimeMs = ((maxFrameTimeNs - deltaTimeNs)/ NANOSECONDS_IN_MILLISECOND) - SLEEP_BUFFER_MS;
-            if(sleepTimeMs > 0) {
-                try {
-                    Thread.sleep(sleepTimeMs);
-                } catch (InterruptedException e) {
-                    log.error(e);
-                }
-            }
+        //Step
+        idleTimeTracker.end();
+        updateTimeTracker.start();
+        gameState.stepState(this, delta);
+        updateTimeTracker.end();
 
-            if (deltaTimeNs > maxFrameTimeNs) {
-                if (deltaTimeNs > minFrameTimeNs) {
-                    //Alert low FPS if FPS falls below 3 percent of target
-                    if (deltaTimeNs > minFrameTimeNs * 1.03) {
-                        log.warn("Low FPS!");
-                    }
-                    deltaTimeNs = minFrameTimeNs;
-                }
+        //Render
+        renderTimeTracker.start();
+        gameState.renderState(this, graphics);
+        renderTimeTracker.end();
+        idleTimeTracker.start();
 
-                //Update input
-                //input.stepInput(window);
-                lastFrameTime = currentTime;
+        handleTransitions();
 
-                stepAndRender((float)deltaTimeNs / NANOSECONDS_IN_MILLISECOND);
-
-                //Handle input
-                input.processInput();
-            }
-
-            //Exit the game if requested by the window
-            if (graphics.closeRequested()) {
-                endGame();
-            }
-        }
+        //Performance Tracking
+        framerateMonitor.update();
     }
 
     public void endGame() {
@@ -159,23 +136,6 @@ public class Game {
 
         maxFrameTimeNs = NANOSECONDS_IN_SECOND / (long)max;
         minFrameTimeNs = NANOSECONDS_IN_SECOND / (long)min;
-    }
-
-    protected void stepAndRender(float delta) {
-        //Step
-        idleTimeTracker.end();
-        updateTimeTracker.start();
-        gameState.stepState(this, delta);
-        updateTimeTracker.end();
-
-        //Render
-        renderTimeTracker.start();
-        gameState.renderState(this, graphics);
-        renderTimeTracker.end();
-        idleTimeTracker.start();
-
-        //Performance Tracking
-        framerateMonitor.update();
     }
 
     public void setState(GameState requestedNextState) {
@@ -194,6 +154,26 @@ public class Game {
                 nextGameState = transition;
             } else {
                 nextGameState = requestedNextState;
+            }
+        }
+    }
+
+    /**
+     * Handles the transitions between states.
+     */
+    protected void handleTransitions() {
+        while(nextGameState != null) {
+            /*We must handle beginning and ending the state for transitions here. We don't need to call this for regular
+            * states or loading screens since the transitions that transition to/away from those states call their begin
+            * and end state methods.*/
+            if(gameState instanceof Transition) {
+                transition.endState(this);
+            }
+            gameState = nextGameState;
+            nextGameState = null;
+            if(gameState instanceof Transition) {
+                gameState.beginState(this);
+                gameState.postBeginState(this);
             }
         }
     }

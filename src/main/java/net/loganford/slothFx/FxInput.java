@@ -1,12 +1,9 @@
-package net.loganford.slothJava2d;
+package net.loganford.slothFx;
 
+import javafx.scene.Scene;
 import net.loganford.slothengine.Input;
 
-import javax.swing.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-
-public class JavaInput extends Input {
+public class FxInput extends Input {
     public static short UP = 0;
     public static short PRESSED = 1;
     public static short DOWN = 2;
@@ -15,29 +12,25 @@ public class JavaInput extends Input {
     private short[] currentBuffer = new short[2048];;
     private short[] nextBuffer = new short[2048];;
 
+    private FxGraphics fxGraphics;
+    private Scene scene;
 
-    private JFrame frame;
-
-    public JavaInput(JFrame frame) {
-        this.frame = frame;
+    public FxInput(FxGraphics fxGraphics) {
+        this.fxGraphics = fxGraphics;
     }
 
     public void initialize() {
-        frame.addKeyListener(new KeyListener() {
-            public void keyTyped(KeyEvent e) {
+        this.scene = fxGraphics.getScene();
 
+        scene.setOnKeyPressed(e -> {
+            if (e.getCode().getCode() < MAX_KEYCODE && e.getCode().getCode() >= 0) {
+                nextBuffer[e.getCode().getCode()] = PRESSED;
             }
+        });
 
-            public void keyPressed(KeyEvent e) {
-                if(e.getKeyCode() < MAX_KEYCODE && e.getKeyCode() >= 0) {
-                    nextBuffer[e.getKeyCode()] = PRESSED;
-                }
-            }
-
-            public void keyReleased(KeyEvent e) {
-                if(e.getKeyCode() < MAX_KEYCODE && e.getKeyCode() >= 0) {
-                    nextBuffer[e.getKeyCode()] = RELEASED;
-                }
+        scene.setOnKeyReleased(e -> {
+            if(e.getCode().getCode() < MAX_KEYCODE && e.getCode().getCode() >= 0) {
+                nextBuffer[e.getCode().getCode()] = RELEASED;
             }
         });
     }
