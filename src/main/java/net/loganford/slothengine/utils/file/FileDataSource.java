@@ -25,7 +25,7 @@ public class FileDataSource extends DataSource {
     }
 
     @Override
-    protected InputStream getInputStream() {
+    public InputStream getInputStream() {
         try {
             return new FileInputStream(file);
         }

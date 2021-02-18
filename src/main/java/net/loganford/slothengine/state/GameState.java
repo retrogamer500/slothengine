@@ -24,6 +24,10 @@ public class GameState {
     }
 
     public final void renderState(Game game, Graphics graphics) {
+        render(game, graphics);
+    }
+
+    public void render(Game game, Graphics graphics) {
 
     }
 

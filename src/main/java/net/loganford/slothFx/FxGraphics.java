@@ -10,9 +10,9 @@ import net.loganford.slothengine.Game;
 import net.loganford.slothengine.config.json.ImageConfig;
 import net.loganford.slothengine.graphics.Graphics;
 import net.loganford.slothengine.graphics.Image;
+import net.loganford.slothengine.utils.file.DataSource;
 
 public class FxGraphics extends Graphics {
-
 
     @Getter private Stage stage;
     @Getter private Scene scene;
@@ -47,11 +47,8 @@ public class FxGraphics extends Graphics {
 
     @Override
     public Image loadImage(ImageConfig imageConfig) {
-        System.out.println("Loading image here!");
-        //Todo: implement
-        return new Image() {
-
-        };
+        DataSource location = imageConfig.getResourceMapper().get((imageConfig.getFilename()));
+        return new FxImage(location.getInputStream());
     }
 }
 

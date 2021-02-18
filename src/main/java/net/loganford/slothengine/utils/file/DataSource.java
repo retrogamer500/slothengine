@@ -11,7 +11,7 @@ import java.nio.charset.StandardCharsets;
 public abstract class DataSource {
     public static int DEFAULT_BUFFER_SIZE = 8192;
 
-    protected abstract InputStream getInputStream();
+    public abstract InputStream getInputStream();
 
     public String load() {
         try(InputStream stream = getInputStream()) {

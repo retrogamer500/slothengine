@@ -183,4 +183,6 @@ public abstract class Game {
         resourceLoaders.add(new ImageLoader(this));
         return resourceLoaders;
     }
+
+    public abstract void run();
 }

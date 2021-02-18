@@ -4,12 +4,13 @@ import lombok.extern.log4j.Log4j2;
 import net.loganford.slothengine.state.GameState;
 
 @Log4j2
-public class GameImpl extends Game {
+public class BasicGame extends Game {
 
-    public GameImpl(GameState gameState) {
+    public BasicGame(GameState gameState) {
         super(gameState);
     }
 
+    @Override
     public void run() {
         initialize();
 
