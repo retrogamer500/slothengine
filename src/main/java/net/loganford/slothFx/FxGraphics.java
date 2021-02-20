@@ -1,5 +1,7 @@
 package net.loganford.slothFx;
 
+import javafx.animation.AnimationTimer;
+import javafx.animation.Timeline;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -17,16 +19,21 @@ public class FxGraphics extends Graphics {
     @Getter private Stage stage;
     @Getter private Scene scene;
     @Getter private Canvas canvas;
+    @Getter private Timeline timeline;
+    @Getter private AnimationTimer animationTimer;
     @Getter private GraphicsContext graphicsContext;
 
     @Setter private boolean closeRequested = false;
+    private boolean vsync = false;
 
-    public FxGraphics(Game game, Stage stage, Scene scene, Canvas canvas, GraphicsContext graphicsContext) {
+    public FxGraphics(Game game, Stage stage, Scene scene, Canvas canvas, Timeline timeline, AnimationTimer animationTimer, GraphicsContext graphicsContext) {
         super(game);
 
         this.stage = stage;
         this.scene = scene;
         this.canvas = canvas;
+        this.timeline = timeline;
+        this.animationTimer = animationTimer;
         this.graphicsContext = graphicsContext;
     }
 
@@ -43,6 +50,24 @@ public class FxGraphics extends Graphics {
     @Override
     public void setTitle(String title) {
         stage.setTitle(title);
+    }
+
+    @Override
+    public void setVsync(boolean vsync) {
+        this.vsync = vsync;
+        if(vsync) {
+            timeline.stop();
+            animationTimer.start();
+        }
+        else {
+            animationTimer.stop();
+            timeline.play();
+        }
+    }
+
+    @Override
+    public boolean isVsync() {
+        return vsync;
     }
 
     @Override

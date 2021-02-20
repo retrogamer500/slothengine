@@ -13,6 +13,10 @@ public abstract class Graphics {
     }
     public abstract void initialize();
     public abstract boolean closeRequested();
+
     public abstract void setTitle(String title);
+    public abstract void setVsync(boolean vsync);
+    public abstract boolean isVsync();
+
     public abstract Image loadImage(ImageConfig imageConfig);
 }

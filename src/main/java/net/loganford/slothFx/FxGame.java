@@ -1,5 +1,6 @@
 package net.loganford.slothFx;
 
+import javafx.animation.AnimationTimer;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
@@ -18,6 +19,7 @@ public class FxGame extends Game {
     private Canvas canvas;
     private GraphicsContext graphicsContext;
     private Timeline timeline;
+    private AnimationTimer animationTimer;
 
     public FxGame(GameState gameState) {
         super(gameState);
@@ -25,7 +27,7 @@ public class FxGame extends Game {
 
     @Override
     public void initialize() {
-        FxGraphics fxGraphics = new FxGraphics(this, stage, scene, canvas, graphicsContext);
+        FxGraphics fxGraphics = new FxGraphics(this, stage, scene, canvas, timeline, animationTimer, graphicsContext);
         setGraphics(fxGraphics);
         setInput(new FxInput(fxGraphics));
 
@@ -86,8 +88,7 @@ public class FxGame extends Game {
             game.canvas = canvas;
             game.graphicsContext = graphicsContext;
 
-            game.initialize();
-
+            //Timeline for unlimited frames
             Timeline timeline = new Timeline(
                     new KeyFrame(Duration.seconds(1),
                             actionEvent -> {
@@ -97,11 +98,24 @@ public class FxGame extends Game {
                     )
             );
 
-            game.timeline = timeline;
-
+            //Animation timer for use when vsync is enabled
+            AnimationTimer animationTimer = new AnimationTimer() {
+                @Override
+                public void handle(long l) {
+                    graphicsContext.clearRect(0, 0, 640, 480);
+                    game.onFxTick();
+                }
+            };
             timeline.setRate( ((double) Game.NANOSECONDS_IN_SECOND) / game.getMaxFrameTimeNs());
             timeline.setCycleCount(Timeline.INDEFINITE);
-            timeline.play();
+
+            game.timeline = timeline;
+            game.animationTimer = animationTimer;
+
+            game.initialize();
+
+            //Call setVsync to kick off either animation timer or timeline based on the vsync setting
+            game.getGraphics().setVsync(game.getGraphics().isVsync());
         }
     }
 }

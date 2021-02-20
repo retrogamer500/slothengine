@@ -37,9 +37,8 @@ public abstract class LoadingScreen extends GameState {
         minFps = game.getMinFps();
         maxFps = game.getMaxFps();
         game.setFps(1, 9999);
-        //Todo: disable vsync if possible
-        //vsync = game.getWindow().isVsync();
-        //game.getWindow().setVsync(false);
+        vsync = game.getGraphics().isVsync();
+        game.getGraphics().setVsync(false);
     }
 
     @Override
@@ -53,8 +52,8 @@ public abstract class LoadingScreen extends GameState {
                 if (resourceLoaders.size() > 1) {
                     resourceLoaders.remove(0);
                     loader = resourceLoaders.get(0);
-                } else {
-                    doneLoading(game);
+                }
+                else {
                     break;
                 }
             }
@@ -81,9 +80,8 @@ public abstract class LoadingScreen extends GameState {
     }
 
     public final void doneLoading(Game game) {
-        game.setState(nextState);
-        //Todo: enable vsync if possible
-        //game.getWindow().setVsync(vsync);
+        game.getGraphics().setVsync(vsync);
         game.setFps(minFps, maxFps);
+        game.setState(nextState);
     }
 }

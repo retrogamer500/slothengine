@@ -17,6 +17,7 @@ public class GameTest {
             public void beginState(Game game) {
                 super.beginState(game);
                 game.setFps(30, 60);
+                game.getGraphics().setVsync(true);
                 slothImage = game.getImageManager().get("sloth");
             }
 
