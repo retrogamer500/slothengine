@@ -1,6 +1,10 @@
 package net.loganford.slothengine.state;
 
+import lombok.Getter;
+import net.loganford.slothFx.FxCanvas;
+import net.loganford.slothFx.FxGraphics;
 import net.loganford.slothengine.Game;
+import net.loganford.slothengine.graphics.Canvas;
 import net.loganford.slothengine.graphics.Graphics;
 import net.loganford.slothengine.resources.LoadTag;
 
@@ -9,8 +13,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GameState {
-    public void beginState(Game game) {
+    @Getter private Canvas canvas;
 
+    public void beginState(Game game) {
+        canvas = game.getGraphics().createCanvas(640, 480); //Todo- grab size from game
     }
 
     public void postBeginState(Game game) {}
@@ -24,7 +30,11 @@ public class GameState {
     }
 
     public final void renderState(Game game, Graphics graphics) {
+        canvas.use();
+        graphics.clear();
         render(game, graphics);
+        graphics.getScreenCanvas().use();
+        canvas.getImage().render(graphics, 0, 0);
     }
 
     public void render(Game game, Graphics graphics) {

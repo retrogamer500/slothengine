@@ -19,4 +19,8 @@ public abstract class Graphics {
     public abstract boolean isVsync();
 
     public abstract Image loadImage(ImageConfig imageConfig);
+    public abstract Canvas createCanvas(int width, int height);
+
+    public abstract Canvas getScreenCanvas();
+    public abstract void clear();
 }

@@ -1,6 +1,8 @@
 package net.loganford.slothFx;
 
 import javafx.scene.canvas.GraphicsContext;
+import lombok.AccessLevel;
+import lombok.Setter;
 import net.loganford.slothengine.graphics.Graphics;
 import net.loganford.slothengine.graphics.Image;
 
@@ -11,6 +13,10 @@ public class FxImage extends Image {
 
     public FxImage(InputStream inputStream) {
         backendImage = new javafx.scene.image.Image(inputStream);
+    }
+
+    protected FxImage(javafx.scene.image.Image backendImage) {
+        this.backendImage = backendImage;
     }
 
     @Override
@@ -37,5 +43,9 @@ public class FxImage extends Image {
     @Override
     public float getHeight() {
         return (float) backendImage.getHeight();
+    }
+
+    protected void setBackendImage(javafx.scene.image.Image backendImage) {
+        this.backendImage = backendImage;
     }
 }
