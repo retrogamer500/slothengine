@@ -1,5 +1,7 @@
 package net.loganford.slothFx;
 
+import com.sun.javafx.geom.transform.BaseTransform;
+import javafx.scene.CacheHint;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
@@ -21,6 +23,8 @@ public class FxCanvas extends Canvas {
         this.width = width;
         this.height = height;
         internalCanvas = new javafx.scene.canvas.Canvas(width, height);
+        internalCanvas.setCache(true);
+        internalCanvas.setCacheHint(CacheHint.SPEED);
         writableImage = new WritableImage(width, height);
 
         snapshotParams = new SnapshotParameters();
@@ -64,6 +68,7 @@ public class FxCanvas extends Canvas {
     }
 
     public Image getImage() {
+        BaseTransform transform = BaseTransform.IDENTITY_TRANSFORM;
         WritableImage image = internalCanvas.snapshot(snapshotParams, writableImage);
         fxImage.setBackendImage(image);
         return fxImage;

@@ -36,6 +36,8 @@ public class FxGraphics extends Graphics {
         this.timeline = timeline;
         this.animationTimer = animationTimer;
         this.graphicsContext = graphicsContext;
+
+        setRenderingStatesOffscreen(false);
     }
 
     @Override

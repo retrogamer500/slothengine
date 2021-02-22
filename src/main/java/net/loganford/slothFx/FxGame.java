@@ -4,6 +4,7 @@ import javafx.animation.AnimationTimer;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
+import javafx.scene.CacheHint;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -77,6 +78,8 @@ public class FxGame extends Game {
 
             Group root = new Group();
             Canvas canvas = new Canvas(640, 480);
+            canvas.setCache(true);
+            canvas.setCacheHint(CacheHint.SPEED);
             GraphicsContext graphicsContext = canvas.getGraphicsContext2D();
             root.getChildren().add(canvas);
             Scene scene = new Scene(root);

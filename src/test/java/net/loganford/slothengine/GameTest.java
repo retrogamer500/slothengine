@@ -30,7 +30,9 @@ public class GameTest {
             @Override
             public void render(Game game, Graphics graphics) {
                 super.render(game, graphics);
-                slothImage.render(graphics,200f, 200f);
+                for(int i = 0; i < 1000; i++) {
+                    slothImage.render(graphics, 20f + .1f*i, (20f + 10 * i) % 480);
+                }
             }
         });
         game.run();
