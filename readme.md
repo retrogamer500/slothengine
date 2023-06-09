@@ -10,7 +10,7 @@ The primary purpose of the engine is currently 2D. At the moment I don't have an
 ## The Game
 
 The JavaFX backend is used to create and run a game:
-```
+```java
 Game game = new FxGame(gameState);
 game.run();
 ```
@@ -18,7 +18,7 @@ game.run();
 ## Resource Management
 
 Resources are specified in a game.json file and automatically loaded:
-```
+```json
 {
   "resources": {
     "images": [
