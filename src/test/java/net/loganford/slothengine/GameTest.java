@@ -10,7 +10,7 @@ import org.junit.Test;
 public class GameTest {
     @Test
     public void testGame() {
-        FxGame game = new FxGame(new GameState() {
+        Game game = new FxGame(new GameState() {
 
             private Image slothImage;
             private Canvas testCanvas;
