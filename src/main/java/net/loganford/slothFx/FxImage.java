@@ -30,8 +30,11 @@ public class FxImage extends Image {
         gc.scale(getScaleX(), getScaleY());
         gc.rotate(Math.toDegrees(getAngle()));
         gc.translate(-getWidth()/2, -getHeight()/2);
+        gc.setGlobalAlpha(graphics.getAlpha());
 
         gc.drawImage(backendImage, 0, 0);
+
+        gc.setGlobalAlpha(1f);
         gc.restore();
     }
 

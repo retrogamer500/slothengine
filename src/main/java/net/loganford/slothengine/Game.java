@@ -13,6 +13,7 @@ import net.loganford.slothengine.resources.loading.ResourceLoader;
 import net.loganford.slothengine.state.GameState;
 import net.loganford.slothengine.state.loading.BasicLoadingScreen;
 import net.loganford.slothengine.state.loading.LoadingScreen;
+import net.loganford.slothengine.state.transition.FadeTransition;
 import net.loganford.slothengine.state.transition.InstantTransition;
 import net.loganford.slothengine.state.transition.Transition;
 import net.loganford.slothengine.utils.file.DataSource;
@@ -56,7 +57,7 @@ public abstract class Game {
     @Getter private GameState gameState;
     private GameState nextGameState;
     /**The transition which will be used between states*/
-    @Getter @Setter private Transition transition = new InstantTransition();
+    @Getter @Setter private Transition transition = new FadeTransition(10);
     /**The loading screen which will be used between states and at the beginning of the game*/
     @Getter @Setter private LoadingScreen loadingScreen = new BasicLoadingScreen();
 
@@ -91,6 +92,7 @@ public abstract class Game {
         //Set up graphics
         graphics.initialize();
         graphics.setTitle("Sloth Engine");
+        graphics.useCanvas(graphics.getScreenCanvas());
         input.initialize();
 
         //Set up game state

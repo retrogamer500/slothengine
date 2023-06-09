@@ -59,13 +59,12 @@ public class FxCanvas extends Canvas {
     }
 
     @Override
-    public void use() {
+    protected void use() {
         fxGraphics.setGraphicsContext(internalCanvas.getGraphicsContext2D());
     }
 
     public Image getImage() {
-        WritableImage image = internalCanvas.snapshot(snapshotParams, writableImage);
-        fxImage.setBackendImage(image);
+        internalCanvas.snapshot(snapshotResult -> {fxImage.setBackendImage(snapshotResult.getImage()); return null;}, snapshotParams, writableImage);
         return fxImage;
     }
 }
