@@ -25,20 +25,24 @@ public class FxSound extends Sound {
     }
 
     @Override
-    public Playback play() {
-        return play(false);
+    public Playback play(float volume) {
+        return play(false, volume);
     }
 
     @Override
-    public Playback loop() {
-        return play(true);
+    public Playback loop(float volume) {
+        return play(true, volume);
     }
 
 
-    private Playback play(boolean loop) {
+    private Playback play(boolean loop, float volume) {
         try {
             clip = AudioSystem.getClip();
             clip.open(AudioSystem.getAudioInputStream(new ByteArrayInputStream(data)));
+
+            FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+            gainControl.setValue(20f * (float) Math.log10(volume));
+
             clip.loop(loop ? Clip.LOOP_CONTINUOUSLY : 0);
 
             clip.addLineListener((l) -> {
