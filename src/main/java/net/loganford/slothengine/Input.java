@@ -141,5 +141,5 @@ public abstract class Input {
 
     public abstract boolean keyDown(int key);
     public abstract boolean keyPressed(int key);
-    public abstract boolean keyUp(int key);
+    public abstract boolean keyReleased(int key);
 }

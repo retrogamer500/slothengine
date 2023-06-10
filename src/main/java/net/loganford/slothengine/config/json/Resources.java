@@ -8,4 +8,5 @@ import java.util.List;
 public class Resources {
     private List<ImageConfig> images;
     private List<FontConfig> fonts;
+    private List<SoundConfig> sounds;
 }

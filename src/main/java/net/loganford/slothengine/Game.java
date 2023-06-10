@@ -4,7 +4,10 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
+import net.loganford.slothFx.FxAudioSystem;
+import net.loganford.slothengine.audio.Sound;
 import net.loganford.slothengine.config.ConfigurationLoader;
+import net.loganford.slothengine.config.json.SoundConfig;
 import net.loganford.slothengine.graphics.Font;
 import net.loganford.slothengine.graphics.Graphics;
 import net.loganford.slothengine.graphics.Image;
@@ -12,11 +15,11 @@ import net.loganford.slothengine.resources.ResourceManager;
 import net.loganford.slothengine.resources.loading.FontLoader;
 import net.loganford.slothengine.resources.loading.ImageLoader;
 import net.loganford.slothengine.resources.loading.ResourceLoader;
+import net.loganford.slothengine.resources.loading.SoundLoader;
 import net.loganford.slothengine.state.GameState;
 import net.loganford.slothengine.state.loading.BasicLoadingScreen;
 import net.loganford.slothengine.state.loading.LoadingScreen;
 import net.loganford.slothengine.state.transition.FadeTransition;
-import net.loganford.slothengine.state.transition.InstantTransition;
 import net.loganford.slothengine.state.transition.Transition;
 import net.loganford.slothengine.utils.file.DataSource;
 import net.loganford.slothengine.utils.file.FileDataSource;
@@ -67,6 +70,7 @@ public abstract class Game {
     //Resource Managers
     @Getter private ResourceManager<Image> imageManager = new ResourceManager<>();
     @Getter private ResourceManager<Font> fontManager = new ResourceManager<>();
+    @Getter private ResourceManager<Sound> soundManager = new ResourceManager<>();
 
     //Measure fps and performance of engine
     private FramerateMonitor framerateMonitor;
@@ -97,6 +101,10 @@ public abstract class Game {
         graphics.setTitle("Sloth Engine");
         graphics.useCanvas(graphics.getScreenCanvas());
         input.initialize();
+
+        //Set up audio system
+        log.info("Setting up audio system");
+        FxAudioSystem.getInstance();
 
         //Set up game state
         log.info("Setting up game states");
@@ -187,8 +195,11 @@ public abstract class Game {
         List<ResourceLoader> resourceLoaders = new ArrayList<>();
         resourceLoaders.add(new ImageLoader(this));
         resourceLoaders.add(new FontLoader(this));
+        resourceLoaders.add(new SoundLoader(this));
         return resourceLoaders;
     }
 
     public abstract void run();
+    public abstract Sound loadSound(SoundConfig soundConfig);
+    public abstract void stopAllSounds();
 }

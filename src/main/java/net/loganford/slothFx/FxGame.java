@@ -11,7 +11,10 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import net.loganford.slothengine.Game;
+import net.loganford.slothengine.audio.Sound;
+import net.loganford.slothengine.config.json.SoundConfig;
 import net.loganford.slothengine.state.GameState;
+import net.loganford.slothengine.utils.file.DataSource;
 
 public class FxGame extends Game {
     private Stage stage;
@@ -38,6 +41,17 @@ public class FxGame extends Game {
     public void run() {
         FxGame.GAME = this;
         Application.launch(FxApplication.class);
+    }
+
+    @Override
+    public Sound loadSound(SoundConfig soundConfig) {
+        DataSource location = soundConfig.getResourceMapper().get((soundConfig.getFilename()));
+        return new FxSound(location.getInputStream());
+    }
+
+    @Override
+    public void stopAllSounds() {
+        FxAudioSystem.getInstance().stopAll();
     }
 
     @Override

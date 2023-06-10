@@ -65,7 +65,7 @@ public class FxInput extends Input {
         return currentBuffer[key] == PRESSED;
     }
 
-    public boolean keyUp(int key) {
+    public boolean keyReleased(int key) {
         return currentBuffer[key] == RELEASED;
     }
 }

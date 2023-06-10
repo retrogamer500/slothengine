@@ -1,6 +1,7 @@
 package net.loganford.slothengine;
 
 import net.loganford.slothFx.FxGame;
+import net.loganford.slothengine.audio.Sound;
 import net.loganford.slothengine.graphics.Canvas;
 import net.loganford.slothengine.graphics.Font;
 import net.loganford.slothengine.graphics.Graphics;
@@ -16,6 +17,7 @@ public class GameTest {
             private Image slothImage;
             private Canvas testCanvas;
             private Font font;
+            private Sound jump;
 
             @Override
             public void beginState(Game game) {
@@ -25,12 +27,17 @@ public class GameTest {
                 slothImage = game.getImageManager().get("sloth");
                 testCanvas = game.getGraphics().createCanvas(64, 64);
                 font = game.getFontManager().get("pixeloid");
+                jump = game.getSoundManager().get("jump");
             }
 
             @Override
             public void step(Game game, float delta) {
                 slothImage.setAngle(slothImage.getAngle() + .001f * delta);
                 super.step(game, delta);
+
+                if(game.getInput().keyPressed(Input.KEY_SPACE)) {
+                    jump.play();
+                }
             }
 
             @Override

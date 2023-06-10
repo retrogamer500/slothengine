@@ -11,7 +11,7 @@ import java.util.Collection;
 import java.util.List;
 
 @Log4j2
-public class ImageLoader extends ResourceLoader{
+public class ImageLoader extends ResourceLoader {
 
     private List<ImageConfig> imagesToLoad;
 

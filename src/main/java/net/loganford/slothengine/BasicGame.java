@@ -4,7 +4,7 @@ import lombok.extern.log4j.Log4j2;
 import net.loganford.slothengine.state.GameState;
 
 @Log4j2
-public class BasicGame extends Game {
+public abstract class BasicGame extends Game {
 
     public BasicGame(GameState gameState) {
         super(gameState);

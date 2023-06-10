@@ -3,10 +3,7 @@ package net.loganford.slothengine.utils.file;
 import lombok.Getter;
 import net.loganford.slothengine.GameEngineException;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
+import java.io.*;
 
 public class FileDataSource extends DataSource {
 
@@ -27,7 +24,7 @@ public class FileDataSource extends DataSource {
     @Override
     public InputStream getInputStream() {
         try {
-            return new FileInputStream(file);
+            return new BufferedInputStream(new FileInputStream(file));
         }
         catch(FileNotFoundException e) {
             throw new GameEngineException(e);

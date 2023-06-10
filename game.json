@@ -12,6 +12,12 @@
         "size": 64,
         "key": "pixeloid"
       }
+    ],
+    "sounds": [
+      {
+        "filename": "data/jump.wav",
+        "key": "jump"
+      }
     ]
   }
 }
