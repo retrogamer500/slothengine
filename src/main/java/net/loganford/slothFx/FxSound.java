@@ -1,47 +1,58 @@
 package net.loganford.slothFx;
 
-import lombok.Getter;
-import net.loganford.slothengine.GameEngineException;
+import lombok.extern.log4j.Log4j2;
+import net.loganford.slothengine.audio.Playback;
 import net.loganford.slothengine.audio.Sound;
-import net.loganford.slothengine.resources.PrototypeResource;
 
 import javax.sound.sampled.*;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+@Log4j2
 public class FxSound extends Sound {
-    @Getter private AudioInputStream inputStream;
+    private byte[] data;
     private long soundInvocation = Long.MIN_VALUE;
+    private Clip clip;
 
     public FxSound(InputStream inputStream) {
         try {
-            this.inputStream = AudioSystem.getAudioInputStream(inputStream);
-        } catch (UnsupportedAudioFileException | IOException e) {
-            throw new GameEngineException(e.getMessage());
+            data = inputStream.readAllBytes();
+            inputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
     @Override
-    public void play() {
-        soundInvocation = FxAudioSystem.getInstance().play(this, false);
+    public Playback play() {
+        return play(false);
     }
 
     @Override
-    public void loop() {
-        soundInvocation = FxAudioSystem.getInstance().play(this, false);
+    public Playback loop() {
+        return play(true);
     }
 
-    @Override
-    public void stop() {
-        FxAudioSystem.getInstance().stop(soundInvocation);
-    }
 
-    @Override
-    public PrototypeResource clone() throws CloneNotSupportedException {
-        return super.clone();
-    }
+    private Playback play(boolean loop) {
+        try {
+            clip = AudioSystem.getClip();
+            clip.open(AudioSystem.getAudioInputStream(new ByteArrayInputStream(data)));
+            clip.loop(loop ? Clip.LOOP_CONTINUOUSLY : 0);
 
-    public AudioFormat getFormat() {
-        return inputStream.getFormat();
+            clip.addLineListener((l) -> {
+                if(l.getType() == LineEvent.Type.STOP) {
+                    Clip lineClip = (Clip) l.getLine();
+                    FxSoundSystem.getInstance().getClips().remove(lineClip);
+                    lineClip.close();
+                }
+            });
+            FxSoundSystem.getInstance().getClips().add(clip);
+            return new FxPlayback(clip);
+        } catch (LineUnavailableException | UnsupportedAudioFileException | IOException e) {
+            log.warn("Unable to play sound!", e);
+        }
+        return new FxPlayback(null);
     }
 }

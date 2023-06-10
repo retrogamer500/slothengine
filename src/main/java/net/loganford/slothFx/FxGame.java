@@ -51,7 +51,11 @@ public class FxGame extends Game {
 
     @Override
     public void stopAllSounds() {
-        FxAudioSystem.getInstance().stopAll();
+        FxSoundSystem.getInstance().getClips().forEach(c -> {
+            c.stop();
+            c.close();
+        });
+        FxSoundSystem.getInstance().getClips().clear();
     }
 
     @Override
@@ -66,7 +70,7 @@ public class FxGame extends Game {
         long currentTime = System.nanoTime();
         long deltaTimeNs = currentTime - lastFrameTime;
 
-        //Spin loop until we can prog1s
+        //Spin loop until we can progress
         while(deltaTimeNs < maxFrameTimeNs) {
             deltaTimeNs = System.nanoTime() - lastFrameTime;
         }

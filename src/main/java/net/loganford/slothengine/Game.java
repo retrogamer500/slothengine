@@ -4,7 +4,6 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
-import net.loganford.slothFx.FxAudioSystem;
 import net.loganford.slothengine.audio.Sound;
 import net.loganford.slothengine.config.ConfigurationLoader;
 import net.loganford.slothengine.config.json.SoundConfig;
@@ -101,10 +100,6 @@ public abstract class Game {
         graphics.setTitle("Sloth Engine");
         graphics.useCanvas(graphics.getScreenCanvas());
         input.initialize();
-
-        //Set up audio system
-        log.info("Setting up audio system");
-        FxAudioSystem.getInstance();
 
         //Set up game state
         log.info("Setting up game states");
