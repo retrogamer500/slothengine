@@ -11,8 +11,10 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import net.loganford.slothengine.Game;
+import net.loganford.slothengine.config.json.FontConfig;
 import net.loganford.slothengine.config.json.ImageConfig;
 import net.loganford.slothengine.graphics.Canvas;
+import net.loganford.slothengine.graphics.Font;
 import net.loganford.slothengine.graphics.Graphics;
 import net.loganford.slothengine.graphics.Image;
 import net.loganford.slothengine.utils.file.DataSource;
@@ -79,6 +81,12 @@ public class FxGraphics extends Graphics {
     public Image loadImage(ImageConfig imageConfig) {
         DataSource location = imageConfig.getResourceMapper().get((imageConfig.getFilename()));
         return new FxImage(location.getInputStream());
+    }
+
+    @Override
+    public Font loadFont(FontConfig fontConfig) {
+        DataSource location = fontConfig.getResourceMapper().get((fontConfig.getFilename()));
+        return new FxFont(location.getInputStream(), fontConfig.size);
     }
 
     @Override

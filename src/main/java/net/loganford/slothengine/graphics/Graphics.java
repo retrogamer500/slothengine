@@ -3,6 +3,7 @@ package net.loganford.slothengine.graphics;
 import lombok.Getter;
 import lombok.Setter;
 import net.loganford.slothengine.Game;
+import net.loganford.slothengine.config.json.FontConfig;
 import net.loganford.slothengine.config.json.ImageConfig;
 import org.joml.Vector4f;
 
@@ -25,6 +26,7 @@ public abstract class Graphics {
     public abstract boolean isVsync();
 
     public abstract Image loadImage(ImageConfig imageConfig);
+    public abstract Font loadFont(FontConfig fontConfig);
     public abstract Canvas createCanvas(int width, int height);
 
     public void useCanvas(Canvas canvas) {

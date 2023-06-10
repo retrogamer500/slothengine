@@ -52,7 +52,7 @@ public class FxGame extends Game {
         long currentTime = System.nanoTime();
         long deltaTimeNs = currentTime - lastFrameTime;
 
-        //Spin loop until we can progress
+        //Spin loop until we can prog1s
         while(deltaTimeNs < maxFrameTimeNs) {
             deltaTimeNs = System.nanoTime() - lastFrameTime;
         }

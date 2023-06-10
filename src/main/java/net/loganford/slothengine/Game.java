@@ -5,9 +5,11 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 import net.loganford.slothengine.config.ConfigurationLoader;
+import net.loganford.slothengine.graphics.Font;
 import net.loganford.slothengine.graphics.Graphics;
 import net.loganford.slothengine.graphics.Image;
 import net.loganford.slothengine.resources.ResourceManager;
+import net.loganford.slothengine.resources.loading.FontLoader;
 import net.loganford.slothengine.resources.loading.ImageLoader;
 import net.loganford.slothengine.resources.loading.ResourceLoader;
 import net.loganford.slothengine.state.GameState;
@@ -64,6 +66,7 @@ public abstract class Game {
 
     //Resource Managers
     @Getter private ResourceManager<Image> imageManager = new ResourceManager<>();
+    @Getter private ResourceManager<Font> fontManager = new ResourceManager<>();
 
     //Measure fps and performance of engine
     private FramerateMonitor framerateMonitor;
@@ -183,6 +186,7 @@ public abstract class Game {
     public List<ResourceLoader> getResourceLoaders() {
         List<ResourceLoader> resourceLoaders = new ArrayList<>();
         resourceLoaders.add(new ImageLoader(this));
+        resourceLoaders.add(new FontLoader(this));
         return resourceLoaders;
     }
 

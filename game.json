@@ -5,6 +5,13 @@
         "filename": "data/sloth.png",
         "key":"sloth"
       }
+    ],
+    "fonts": [
+      {
+        "filename": "data/pixeloid.ttf",
+        "size": 64,
+        "key": "pixeloid"
+      }
     ]
   }
 }

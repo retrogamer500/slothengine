@@ -2,6 +2,7 @@ package net.loganford.slothengine;
 
 import net.loganford.slothFx.FxGame;
 import net.loganford.slothengine.graphics.Canvas;
+import net.loganford.slothengine.graphics.Font;
 import net.loganford.slothengine.graphics.Graphics;
 import net.loganford.slothengine.graphics.Image;
 import net.loganford.slothengine.state.GameState;
@@ -14,6 +15,7 @@ public class GameTest {
 
             private Image slothImage;
             private Canvas testCanvas;
+            private Font font;
 
             @Override
             public void beginState(Game game) {
@@ -22,6 +24,7 @@ public class GameTest {
                 game.getGraphics().setVsync(true);
                 slothImage = game.getImageManager().get("sloth");
                 testCanvas = game.getGraphics().createCanvas(64, 64);
+                font = game.getFontManager().get("pixeloid");
             }
 
             @Override
@@ -46,6 +49,9 @@ public class GameTest {
                 graphics.setAlpha(.5f);
                 testCanvas.getImage().render(graphics, 200, 200);
                 graphics.setAlpha(1f);
+
+                graphics.setColor(0f, 0f, 0f);
+                font.render(graphics, 8, 8, "Hello world!");
             }
         });
         game.run();
