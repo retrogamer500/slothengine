@@ -17,8 +17,4 @@ public class FxSoundSystem {
 
         return instance;
     }
-
-    public void stopAll() {
-
-    }
 }

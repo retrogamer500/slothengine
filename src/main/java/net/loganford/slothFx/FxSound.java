@@ -12,7 +12,6 @@ import java.io.InputStream;
 @Log4j2
 public class FxSound extends Sound {
     private byte[] data;
-    private long soundInvocation = Long.MIN_VALUE;
     private Clip clip;
 
     public FxSound(InputStream inputStream) {
