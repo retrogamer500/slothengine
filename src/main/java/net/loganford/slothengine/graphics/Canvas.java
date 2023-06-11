@@ -8,4 +8,6 @@ public abstract class Canvas {
     protected abstract void use();
 
     public abstract Image getImage();
+
+    public void cleanup() {};
 }

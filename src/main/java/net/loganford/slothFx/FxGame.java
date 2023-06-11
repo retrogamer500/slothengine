@@ -101,6 +101,14 @@ public class FxGame extends Game {
             stage.setScene(scene);
             stage.show();
 
+            stage.widthProperty().addListener((obs, oldVal, newVal) -> {
+                game.getWindow().setSize(newVal.intValue(), game.getWindow().getHeight());
+            });
+
+            stage.heightProperty().addListener((obs, oldVal, newVal) -> {
+                game.getWindow().setSize(game.getWindow().getWidth(), newVal.intValue());
+            });
+
             game.stage = stage;
             game.scene = scene;
             game.canvas = canvas;
@@ -110,7 +118,7 @@ public class FxGame extends Game {
             Timeline timeline = new Timeline(
                     new KeyFrame(Duration.seconds(1),
                             actionEvent -> {
-                                graphicsContext.clearRect(0, 0, 640, 480);
+                                graphicsContext.clearRect(0, 0, game.getWindow().getWidth(), game.getWindow().getHeight());
                                 game.onFxTick();
                             }
                     )
@@ -120,7 +128,7 @@ public class FxGame extends Game {
             AnimationTimer animationTimer = new AnimationTimer() {
                 @Override
                 public void handle(long l) {
-                    graphicsContext.clearRect(0, 0, 640, 480);
+                    graphicsContext.clearRect(0, 0, game.getWindow().getWidth(), game.getWindow().getHeight());
                     game.onFxTick();
                 }
             };
@@ -135,5 +143,22 @@ public class FxGame extends Game {
             //Call setVsync to kick off either animation timer or timeline based on the vsync setting
             game.getGraphics().setVsync(game.getGraphics().isVsync());
         }
+    }
+
+    @Override
+    public void onResize() {
+        super.onResize();
+        stage.setWidth(getWindow().getWidth());
+        stage.setHeight(getWindow().getHeight());
+    }
+
+    @Override
+    public void onResizeEnable() {
+        stage.setResizable(true);
+    }
+
+    @Override
+    public void onResizeDisable() {
+        stage.setResizable(false);
     }
 }

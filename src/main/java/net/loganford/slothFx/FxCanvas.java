@@ -64,7 +64,7 @@ public class FxCanvas extends Canvas {
     }
 
     public Image getImage() {
-        internalCanvas.snapshot(snapshotResult -> {fxImage.setBackendImage(snapshotResult.getImage()); return null;}, snapshotParams, writableImage);
+        internalCanvas.snapshot(snapshotParams, writableImage);
         return fxImage;
     }
 }

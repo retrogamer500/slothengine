@@ -101,7 +101,7 @@ public class FxGraphics extends Graphics {
 
     @Override
     public void clear() {
-        getGraphicsContext().clearRect(0, 0, 640, 480); //Todo: move to canvas?
+        getGraphicsContext().clearRect(0, 0, getGame().getWindow().getWidth(), getGame().getWindow().getHeight());
     }
 
     @Override

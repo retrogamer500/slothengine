@@ -49,6 +49,8 @@ public abstract class Game {
     @Getter protected long maxFrameTimeNs = NANOSECONDS_IN_SECOND / 144L;
     @Getter protected long minFrameTimeNs = NANOSECONDS_IN_SECOND / 60L;
 
+    @Getter Window window;
+
     //Default resource mapper to use when converting resource paths in the config.json into files
     @Getter @Setter
     private ResourceMapper resourceMapper = new FileResourceMapper(new File(""));
@@ -94,6 +96,10 @@ public abstract class Game {
         //Load configuration
         log.info("Loading configuration");
         configurationLoader.load(resourceMapper, configSource);
+
+        //Set up window
+        window = new Window(this);
+        window.setSize(100, 100);
 
         //Set up graphics
         graphics.initialize();
@@ -197,4 +203,13 @@ public abstract class Game {
     public abstract void run();
     public abstract Sound loadSound(SoundConfig soundConfig);
     public abstract void stopAllSounds();
+
+    public void onResize() {
+        if(gameState != null) {
+            gameState.onResize();
+        }
+    }
+
+    public void onResizeEnable() {}
+    public void onResizeDisable() {}
 }

@@ -12,9 +12,11 @@ import java.util.List;
 
 public class GameState {
     @Getter private Canvas stateCanvas;
+    private Game game;
 
     public void beginState(Game game) {
-        stateCanvas = game.getGraphics().createCanvas(640, 480); //Todo- grab size from game
+        this.game = game;
+        stateCanvas = game.getGraphics().createCanvas(game.getWindow().getWidth(), game.getWindow().getHeight());
     }
 
     public void postBeginState(Game game) {}
@@ -41,7 +43,7 @@ public class GameState {
     }
 
     public void endState(Game game) {
-
+        stateCanvas.cleanup();
     }
 
     /**
@@ -64,5 +66,12 @@ public class GameState {
         }
 
         return requiredTags;
+    }
+
+    public void onResize() {
+        if(stateCanvas != null) {
+            stateCanvas.cleanup();
+            stateCanvas = game.getGraphics().createCanvas(game.getWindow().getWidth(), game.getWindow().getHeight());
+        }
     }
 }
